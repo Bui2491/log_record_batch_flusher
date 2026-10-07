@@ -41,3 +41,10 @@ The trade-off is latency and a window for data loss. Records sit in memory until
 - `BatchFlushHandler(flush_func, capacity=100, interval=5.0, clock=None)` — the handler class.
 
 `flush_func` receives `list[logging.LogRecord]`. `capacity` must be ≥ 1. `interval` must be > 0.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
